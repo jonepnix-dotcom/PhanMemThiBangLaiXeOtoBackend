@@ -1,69 +1,164 @@
-# ASP.NET Core Web API Serverless Application
+# 🚗 PhanMemThiBangLaiXeOtoBackend
 
-This project shows how to run an ASP.NET Core Web API project as an AWS Lambda exposed through Amazon API Gateway. The NuGet package [Amazon.Lambda.AspNetCoreServer](https://www.nuget.org/packages/Amazon.Lambda.AspNetCoreServer) contains a Lambda function that is used to translate requests from API Gateway into the ASP.NET Core framework and then the responses from ASP.NET Core back to API Gateway.
+Backend system for an online automobile driving license exam application.
+This project provides REST APIs, authentication, exam management, and database backup/restore support using SQL Server.
 
+---
 
-For more information about how the Amazon.Lambda.AspNetCoreServer package works and how to extend its behavior view its [README](https://github.com/aws/aws-lambda-dotnet/blob/master/Libraries/src/Amazon.Lambda.AspNetCoreServer/README.md) file in GitHub.
+# 📌 Project Overview
 
+This backend system supports a driving license learning platform including:
 
-### Configuring for API Gateway HTTP API ###
+* User authentication & authorization
+* Driving theory exam management
+* Question bank management
+* Exam scoring system
+* Real-time exam data handling (API-based)
+* SQL Server database backup/restore integration
 
-API Gateway supports the original REST API and the new HTTP API. In addition HTTP API supports 2 different
-payload formats. When using the 2.0 format the base class of `LambdaEntryPoint` must be `Amazon.Lambda.AspNetCoreServer.APIGatewayHttpApiV2ProxyFunction`.
-For the 1.0 payload format the base class is the same as REST API which is `Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction`.
-**Note:** when using the `AWS::Serverless::Function` CloudFormation resource with an event type of `HttpApi` the default payload
-format is 2.0 so the base class of `LambdaEntryPoint` must be `Amazon.Lambda.AspNetCoreServer.APIGatewayHttpApiV2ProxyFunction`.
+---
 
+# 🚀 Technologies Used
 
-### Configuring for Application Load Balancer ###
+## Backend
 
-To configure this project to handle requests from an Application Load Balancer instead of API Gateway change
-the base class of `LambdaEntryPoint` from `Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction` to 
-`Amazon.Lambda.AspNetCoreServer.ApplicationLoadBalancerFunction`.
+* ASP.NET Core Web API
+* Entity Framework Core
+* LINQ
+* Dependency Injection
 
-### Project Files ###
+## Database
 
-* serverless.template - an AWS CloudFormation Serverless Application Model template file for declaring your Serverless functions and other AWS resources
-* aws-lambda-tools-defaults.json - default argument settings for use with Visual Studio and command line deployment tools for AWS
-* LambdaEntryPoint.cs - class that derives from **Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction**. The code in 
-this file bootstraps the ASP.NET Core hosting framework. The Lambda function is defined in the base class.
-Change the base class to **Amazon.Lambda.AspNetCoreServer.ApplicationLoadBalancerFunction** when using an 
-Application Load Balancer.
-* LocalEntryPoint.cs - for local development this contains the executable Main function which bootstraps the ASP.NET Core hosting framework with Kestrel, as for typical ASP.NET Core applications.
-* Startup.cs - usual ASP.NET Core Startup class used to configure the services ASP.NET Core will use.
-* appsettings.json - used for local development.
-* Controllers\ValuesController - example Web API controller
+* Microsoft SQL Server
+* Database Backup (.bak file support)
 
-You may also have a test project depending on the options selected.
+## Tools
 
-## Here are some steps to follow from Visual Studio:
+* Visual Studio 2022
+* SQL Server Management Studio (SSMS)
+* Git & GitHub
+* Postman
 
-To deploy your Serverless application, right click the project in Solution Explorer and select *Publish to AWS Lambda*.
+---
 
-To view your deployed application open the Stack View window by double-clicking the stack name shown beneath the AWS CloudFormation node in the AWS Explorer tree. The Stack View also displays the root URL to your published application.
+# 🗄️ Database Setup (IMPORTANT)
 
-## Here are some steps to follow to get started from the command line:
+This project uses a **pre-built SQL Server backup file (.bak)**.
 
-Once you have edited your template and code you can deploy your application using the [Amazon.Lambda.Tools Global Tool](https://github.com/aws/aws-extensions-for-dotnet-cli#aws-lambda-amazonlambdatools) from the command line.
+## 📂 Step 1: Locate backup file
 
-Install Amazon.Lambda.Tools Global Tools if not already installed.
-```
-    dotnet tool install -g Amazon.Lambda.Tools
-```
+Database backup is included in:
 
-If already installed check if new version is available.
-```
-    dotnet tool update -g Amazon.Lambda.Tools
+```bash id="db1"
+/Database/BackenDatabase.bak
 ```
 
-Execute unit tests
-```
-    cd "ApiThiBangLaiXeOto/test/ApiThiBangLaiXeOto.Tests"
-    dotnet test
+or downloaded from repository.
+
+---
+
+## 📥 Step 2: Restore database in SQL Server
+
+Open **SQL Server Management Studio (SSMS)** and run:
+
+```sql id="db2"
+RESTORE DATABASE BackenDatabase
+FROM DISK = 'YOUR_PATH\BackenDatabase.bak'
+WITH REPLACE;
 ```
 
-Deploy application
+Example:
+
+```sql id="db3"
+RESTORE DATABASE BackenDatabase
+FROM DISK = 'D:\Backup\BackenDatabase.bak'
+WITH REPLACE;
 ```
-    cd "ApiThiBangLaiXeOto/src/ApiThiBangLaiXeOto"
-    dotnet lambda deploy-serverless
+
+---
+
+## ⚠️ Step 3: Check logical file (if error occurs)
+
+```sql id="db4"
+RESTORE FILELISTONLY
+FROM DISK = 'D:\Backup\BackenDatabase.bak';
 ```
+
+---
+
+# ⚙️ Configuration
+
+## Update connection string in `appsettings.json`
+
+```json id="cfg1"
+"ConnectionStrings": {
+  "MyConnect": "Data Source=localhost;Initial Catalog=dbthi_banglai;User ID=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True"
+}
+```
+
+---
+
+# 🚀 Run Project
+
+## 1. Build project
+
+```bash id="run1"
+dotnet build
+```
+
+---
+
+## 2. Run project
+
+```bash id="run2"
+dotnet run
+```
+
+or press:
+
+```text id="run3"
+F5 (Visual Studio)
+```
+
+---
+
+# 📡 API Features
+
+* User login/register
+* Get exam questions
+* Submit exam answers
+* Calculate score
+* Manage question bank (Admin)
+* Manage exams (Admin)
+
+---
+
+# 🧠 Learning Outcomes
+
+This project helped improve:
+
+* ASP.NET Core Web API development
+* SQL Server backup/restore workflow
+* RESTful API design
+* Database design for exam systems
+* Authentication & authorization concepts
+* Clean backend architecture
+
+---
+
+# 🔗 Repository
+
+* GitHub: https://github.com/jonepnix-dotcom/PhanMemThiBangLaiXeOtoBackend
+
+---
+
+# 👨‍💻 Author
+
+* GitHub: https://github.com/jonepnix-dotcom
+* Email: [jonepnix@gmail.com](mailto:jonepnix@gmail.com)
+
+---
+
+# 📄 License
+
+This project is for learning and portfolio purposes only.
